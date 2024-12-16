@@ -3,8 +3,9 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../App'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { styles } from '../styles'
-import { Pressable, Text, TextInput, View } from 'react-native'
-import { useCallback, useState } from 'react'
+import { Pressable, Text, TextInput, View, Keyboard } from 'react-native'
+import { useCallback, useEffect, useState } from 'react'
+import * as ReactNativeAppClip from 'react-native-app-clip'
 
 const Calculator = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>()
@@ -13,25 +14,42 @@ const Calculator = () => {
   const [y, setY] = useState<number>(0)
   const [res, setRes] = useState<number | null>(null)
 
+  const [numOperations, setNumOperations] = useState<number>(0)
+
   const handleAdd = useCallback(async () => {
     const sum = x + y
+    Keyboard.dismiss()
     setRes(sum)
+    setNumOperations((prev: number) => prev + 1)
   }, [x, y])
 
   const handleSub = useCallback(async () => {
+    Keyboard.dismiss()
     const diff = x - y
     setRes(diff)
+    setNumOperations((prev: number) => prev + 1)
   }, [x, y])
 
   const handleMul = useCallback(async () => {
+    Keyboard.dismiss()
     const prod = x * y
     setRes(prod)
+    setNumOperations((prev: number) => prev + 1)
   }, [x, y])
 
   const handleDiv = useCallback(async () => {
+    Keyboard.dismiss()
     const quot = y == 0 ? 0 : x / y
     setRes(quot)
+    setNumOperations((prev: number) => prev + 1)
   }, [x, y])
+
+  useEffect(() => {
+    if (numOperations >= 5 && ReactNativeAppClip.isClip()) {
+      console.warn(`About to launch app overlay`)
+      ReactNativeAppClip.displayOverlay()
+    }
+  }, [numOperations])
 
 
   return (
@@ -58,16 +76,20 @@ const Calculator = () => {
           onPress={handleSub}>
           <Text>Sub</Text>
         </Pressable>
+        { !ReactNativeAppClip.isClip() && (
         <Pressable
           style={styles.smallButton}
           onPress={handleMul}>
           <Text>Mul</Text>
         </Pressable>
+        )}
+        { !ReactNativeAppClip.isClip() && (
         <Pressable
           style={styles.smallButton}
           onPress={handleDiv}>
           <Text>Div</Text>
         </Pressable>
+        )}
       </View>
       <Pressable
         style={styles.button}

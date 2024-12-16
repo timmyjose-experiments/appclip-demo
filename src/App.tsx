@@ -1,7 +1,10 @@
-import { NavigationContainer } from "@react-navigation/native"
-import { createNativeStackNavigator } from "@react-navigation/native-stack"
-import Home from "./screens/Home"
-import Calculator from "./screens/Calculator"
+import { NavigationContainer } from '@react-navigation/native'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import Home from './screens/Home'
+import Calculator from './screens/Calculator'
+import * as ReactNativeAppClip from 'react-native-app-clip'
+import { useEffect } from 'react'
+import { Alert } from 'react-native'
 
 export type RootStackParamList = {
   Home: undefined
@@ -11,6 +14,11 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>()
 
 const App = () => {
+  useEffect(() => {
+    const alertMsg = ReactNativeAppClip.isClip() ? 'Running app clip' : 'Running full app'
+    Alert.alert(alertMsg)
+  }, [])
+
   return (
     <NavigationContainer>
       <Stack.Navigator>

@@ -6,6 +6,8 @@ package-lock.json
 android
 ios
 .vim
+appclip-demo-code.svg
+appclip-demo-qr-code.png
 
 # Expo
 .expo/
