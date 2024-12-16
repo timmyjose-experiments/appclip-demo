@@ -6,6 +6,7 @@ import { styles } from '../styles'
 import { Pressable, Text, TextInput, View, Keyboard } from 'react-native'
 import { useCallback, useEffect, useState } from 'react'
 import * as ReactNativeAppClip from 'react-native-app-clip'
+import * as SecureStore from 'expo-secure-store'
 
 const Calculator = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>()
@@ -16,11 +17,25 @@ const Calculator = () => {
 
   const [numOperations, setNumOperations] = useState<number>(0)
 
-  const handleAdd = useCallback(async () => {
+  const [lastSavedComputation, setLastSavedComputation] = useState<string | null>(null)
+
+  const saveLastComputation = async (val: number) => {
+    console.warn(`Saving last computation: ${val}`)
+    await SecureStore.setItemAsync('lastComputation', val.toString())
+  }
+
+  useEffect(() => {
+    (async () => {
+      setLastSavedComputation(await SecureStore.getItemAsync('lastComputation'))
+    })()
+  }, [])
+
+const handleAdd = useCallback(async () => {
     const sum = x + y
     Keyboard.dismiss()
     setRes(sum)
     setNumOperations((prev: number) => prev + 1)
+    await saveLastComputation(sum)
   }, [x, y])
 
   const handleSub = useCallback(async () => {
@@ -28,6 +43,7 @@ const Calculator = () => {
     const diff = x - y
     setRes(diff)
     setNumOperations((prev: number) => prev + 1)
+    await saveLastComputation(diff)
   }, [x, y])
 
   const handleMul = useCallback(async () => {
@@ -54,6 +70,7 @@ const Calculator = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      { !!lastSavedComputation && (<Text>Last Saved Computation: {lastSavedComputation}</Text>)}
       <TextInput
         keyboardType='numeric'
         style={styles.textInput}

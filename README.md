@@ -35,5 +35,8 @@ Testing App Clip invocation locally:
 Now scan the App Clip code generated previously, and it should show the App Clip Card.
 Clicking `Open` on the App Clip Card should open the app clip.
 
-    
 
+AppStoreConnect
+===============
+
+1. Create an app group for the app and the app clip.

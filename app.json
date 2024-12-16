@@ -33,14 +33,15 @@
           "name": "appclip-demo clip",
           "bundIdSuffix": "Clip",
           "targetSuffix": "Clip",
-          "groupIdentifier": "com.timmyjose.appclipdemo",
+          "groupIdentifier": "group.com.timmyjose.appclipdemo",
           "enabled": true,
           "appleSignin": true,
           "requestEphemeralUserNotification": true,
           "excludedPackages": [],
           "pushNotifications": true
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "extra": {
       "eas": {
